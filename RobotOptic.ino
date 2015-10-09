@@ -55,8 +55,7 @@ const int valorBlanc = 400;
 // Definim on esta connectat
 #define TRIGGER_PIN  13
 #define ECHO_PIN     12
-float cmMsec, inMsec;
-long microsec;
+
 // Inicialització de la funció
 Ultrasonic ultrasonic(TRIGGER_PIN, ECHO_PIN);
 
@@ -91,6 +90,10 @@ void loop() {
   // put your main code here, to run repeatedly:
   int avant;
   int enrera;
+  int contador;
+  float cmMsec, inMsec;
+  long microsec = ultrasonic.timing();
+  contador=0;
   enrera=0;
   avant=0;
   microsec=0;
@@ -102,6 +105,9 @@ void loop() {
   // Obtenim la distancia
   microsec = ultrasonic.timing();
   cmMsec = ultrasonic.convert(microsec, Ultrasonic::CM); //Centimetres
+  
+  Serial.print("Fora Bucle, CM: ");
+  Serial.println(cmMsec);
   // inMsec = ultrasonic.convert(microsec, Ultrasonic::IN); //Polzades
  /* Serial.print("Llum: ");
   Serial.print(sensorValue);
@@ -120,40 +126,40 @@ void loop() {
   while (cmMsec>35 and avant<5){
     moviment(FORWARD);
     moviment(ENDCODE);
-    delay(10);
+    //delay(10);
     microsec = ultrasonic.timing();
     cmMsec = ultrasonic.convert(microsec, Ultrasonic::CM); //Centimetres
-    delay(10);
-    /*Serial.print(", CM: ");
-  Serial.println(cmMsec);
-  Serial.println("Av: ");
-  Serial.println(avant);
-  Serial.println(microsec);*/
+    Serial.print("Endavant, CM: ");
+    Serial.println(cmMsec);
+    //delay(10);
     avant++;
   }
   avant=0;
   while (cmMsec<55){
     moviment(BACKWARD_RIGHT);
     moviment(ENDCODE);
-    delay(10);
+    //delay(10);
     microsec = ultrasonic.timing();
     cmMsec = ultrasonic.convert(microsec, Ultrasonic::CM); //Centimetres
-    delay(10);
+    Serial.print("Endarrera dreta, CM: ");
+    Serial.println(cmMsec);
+    //delay(10);
     enrera=1;
-    /*Serial.print(", CM: ");
-   Serial.println(cmMsec);*/
    }
-   if (enrera=1){
+   if (enrera==1){
     while (cmMsec>35 and avant<5){
       moviment(FORWARD_RIGHT);
       moviment(ENDCODE);
-      delay(10);
+      //delay(10);
       microsec = ultrasonic.timing();
       cmMsec = ultrasonic.convert(microsec, Ultrasonic::CM); //Centimetres
-      delay(10);
+      Serial.print("Endavant Dreta, CM: ");
+      Serial.println(cmMsec);
+      //delay(10);
       avant++;
     }
    }
+   enrera=0;
   /*if (sensorValue > valorBlanc){
     // Cotxe endavant
     Serial.println("Endavant");
@@ -175,6 +181,5 @@ void loop() {
       Serial.println("Esquerra"); 
     }
   }*/
-  //delay(200);
+  delay(500);
 }
-
