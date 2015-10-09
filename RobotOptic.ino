@@ -1,9 +1,6 @@
 /*
  * Programa per controlar un robot amb arduino de forma autonoma
  * 
- * Escrit per Xavier Delgado
- * GPL v3 License
- *
  * Com a sensor de distancia es fa servir l'HC-SR04 amb la llibreria Ultrasonic.h 
  * http://freecode.com/projects/hc-sr04-ultrasonic-arduino-library
  * 
@@ -12,11 +9,14 @@
  * Modificació de un cotxe RC amb xip RX2
  * El codi de control del xip RX2 está basat en codi de:
  * Parts del codi de David Bernier
- * https://github.com/monsieurDavid/
  * Realtek RX2 (RX2B) Control via Arduino
  *
- * També basat en codi de mindprobe http://forum.arduino.cc/index.php?topic=171238.0
- * RX2B datasheet http://www.datasheetdir.com/RX-2B+download
+ * Written by David Bernier, Aug. 26, 2013
+ * https://github.com/monsieurDavid/
+ * GPL v3 License
+ *
+ *  També basat en codi de mindprobe http://forum.arduino.cc/index.php?topic=171238.0
+ *  RX2B datasheet http://www.datasheetdir.com/RX-2B+download
  *   
  */
 
@@ -37,11 +37,14 @@ const int valorBlanc = 400;
 // Els 2 seguents els he intercambiat pq crec que estan malament
 #define FORWARD_RIGHT  28
 #define FORWARD_LEFT   34
+
 #define BACKWARD       40
+
 #define BACKWARD_RIGHT 46
 #define BACKWARD_LEFT  52
-#define LEFT           58
-#define RIGHT          64
+// Tambe canviats
+#define RIGHT           58
+#define LEFT          64
 
 //PIN de sortida i connectat a l'antena de la joguina
 #define ANTENA     9
@@ -86,6 +89,12 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
+  int avant;
+  int enrera;
+  enrera=0;
+  avant=0;
+  microsec=0;
+  cmMsec=0;
   //Llegim valor del sensor de llum
   sensorValue = analogRead(A0);
   // Print del Valor per port serie
@@ -94,21 +103,58 @@ void loop() {
   microsec = ultrasonic.timing();
   cmMsec = ultrasonic.convert(microsec, Ultrasonic::CM); //Centimetres
   // inMsec = ultrasonic.convert(microsec, Ultrasonic::IN); //Polzades
-  Serial.print("Llum: ");
+ /* Serial.print("Llum: ");
   Serial.print(sensorValue);
   Serial.print(", CM: ");
-  Serial.println(cmMsec);
-  if (cmMsec>10){
+  Serial.println(cmMsec);*/
+  /*if (cmMsec>10){
     moviment(FORWARD);
     moviment(ENDCODE);
   }
   else{
-    //moviment(BACKWARD_LEFT);
-    //moviment(ENDCODE);
-    moviment(FORWARD_LEFT);
+    moviment(BACKWARD_LEFT);
     moviment(ENDCODE);
+    //moviment(FORWARD_LEFT);
+    //moviment(ENDCODE);
+  }*/
+  while (cmMsec>35 and avant<5){
+    moviment(FORWARD);
+    moviment(ENDCODE);
+    delay(10);
+    microsec = ultrasonic.timing();
+    cmMsec = ultrasonic.convert(microsec, Ultrasonic::CM); //Centimetres
+    delay(10);
+    /*Serial.print(", CM: ");
+  Serial.println(cmMsec);
+  Serial.println("Av: ");
+  Serial.println(avant);
+  Serial.println(microsec);*/
+    avant++;
   }
-  if (sensorValue > valorBlanc){
+  avant=0;
+  while (cmMsec<55){
+    moviment(BACKWARD_RIGHT);
+    moviment(ENDCODE);
+    delay(10);
+    microsec = ultrasonic.timing();
+    cmMsec = ultrasonic.convert(microsec, Ultrasonic::CM); //Centimetres
+    delay(10);
+    enrera=1;
+    /*Serial.print(", CM: ");
+   Serial.println(cmMsec);*/
+   }
+   if (enrera=1){
+    while (cmMsec>35 and avant<5){
+      moviment(FORWARD_RIGHT);
+      moviment(ENDCODE);
+      delay(10);
+      microsec = ultrasonic.timing();
+      cmMsec = ultrasonic.convert(microsec, Ultrasonic::CM); //Centimetres
+      delay(10);
+      avant++;
+    }
+   }
+  /*if (sensorValue > valorBlanc){
     // Cotxe endavant
     Serial.println("Endavant");
   }
@@ -128,7 +174,7 @@ void loop() {
       Serial.println("Tornem");
       Serial.println("Esquerra"); 
     }
-  }
-  
-  delay(200);
+  }*/
+  //delay(200);
 }
+
