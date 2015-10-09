@@ -1,6 +1,9 @@
 /*
  * Programa per controlar un robot amb arduino de forma autonoma
  * 
+ * Escrit per Xavier Delgado
+ * GPL v3 License
+ *
  * Com a sensor de distancia es fa servir l'HC-SR04 amb la llibreria Ultrasonic.h 
  * http://freecode.com/projects/hc-sr04-ultrasonic-arduino-library
  * 
@@ -9,14 +12,11 @@
  * Modificació de un cotxe RC amb xip RX2
  * El codi de control del xip RX2 está basat en codi de:
  * Parts del codi de David Bernier
+ * https://github.com/monsieurDavid/
  * Realtek RX2 (RX2B) Control via Arduino
  *
- * Written by David Bernier, Aug. 26, 2013
- * https://github.com/monsieurDavid/
- * GPL v3 License
- *
- *  També basat en codi de mindprobe http://forum.arduino.cc/index.php?topic=171238.0
- *  RX2B datasheet http://www.datasheetdir.com/RX-2B+download
+ * També basat en codi de mindprobe http://forum.arduino.cc/index.php?topic=171238.0
+ * RX2B datasheet http://www.datasheetdir.com/RX-2B+download
  *   
  */
 
