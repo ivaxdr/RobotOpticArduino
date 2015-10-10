@@ -152,6 +152,7 @@ void loop() {
     enrera=1;
     avant++;
    }
+   avant=0;
    if (enrera==1){
     while (cmMsec>35 and avant<1){
       moviment(FORWARD_RIGHT);
