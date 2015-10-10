@@ -4,10 +4,11 @@
  * Escrit per Xavier Delgado
  * GPL v3 License
  *
- * Com a sensor de distancia es fa servir l'HC-SR04 amb la llibreria Ultrasonic.h 
- * http://freecode.com/projects/hc-sr04-ultrasonic-arduino-library
+ * Com a sensor de distancia es fa servir l'HC-SR04 amb la llibreria NewPing.h 
+ * http://playground.arduino.cc/Code/NewPing
  * 
- * Hi ha una fotoresistencia al pin A0 per mesurà la llum, es farà servir per seguir la linia
+ * 
+ * Hi ha una fotoresistencia al pin A0 per mesurar la llum, es farà servir per seguir la linia
  * 
  * Modificació de un cotxe RC amb xip RX2
  * El codi de control del xip RX2 está basat en codi de:
@@ -51,13 +52,14 @@ const int valorBlanc = 400;
 // Per tal que funcioni s'ha de cridar la funció moviment (int tipus_moviment) dient quin moviment fem i despres cridarla amb ENDCODE
 
 // Sensor UltraSonic de distancia
-#include <Ultrasonic.h>
-// Definim on esta connectat
+#include <NewPing.h>
+// Definim on esta connectat i destància màxima
 #define TRIGGER_PIN  13
 #define ECHO_PIN     12
+#define MAX_DISTANCE 400
 
 // Inicialització de la funció
-Ultrasonic ultrasonic(TRIGGER_PIN, ECHO_PIN);
+NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 
 
 void moviment (int tipus_moviment){
@@ -81,7 +83,7 @@ void moviment (int tipus_moviment){
 
 void setup() {
   // put your setup code here, to run once:
-  Serial.begin(9600);
+  Serial.begin(115200);
   pinMode(ANTENA, OUTPUT);
 
 }
@@ -91,25 +93,28 @@ void loop() {
   int avant;
   int enrera;
   int contador;
-  float cmMsec, inMsec;
-  long microsec = ultrasonic.timing();
+  float cmMsec;
   contador=0;
   enrera=0;
   avant=0;
-  microsec=0;
   cmMsec=0;
   //Llegim valor del sensor de llum
   sensorValue = analogRead(A0);
   // Print del Valor per port serie
   Serial.println(sensorValue);
   // Obtenim la distancia
-  microsec = ultrasonic.timing();
-  cmMsec = ultrasonic.convert(microsec, Ultrasonic::CM); //Centimetres
-  
+  cmMsec = sonar.ping_cm();
+  /*// sin no mesura bé la distancia reset i tornar a llegir
+  if (cmMsec==0.00){
+    digitalWrite(TRIGGER_PIN, LOW);
+    delayMicroseconds(100);
+    digitalWrite(TRIGGER_PIN, HIGH);
+    microsec = ultrasonic.timing();
+    cmMsec = ultrasonic.convert(microsec, Ultrasonic::CM); //Centimetres
+  }*/
   Serial.print("Fora Bucle, CM: ");
   Serial.println(cmMsec);
-  // inMsec = ultrasonic.convert(microsec, Ultrasonic::IN); //Polzades
- /* Serial.print("Llum: ");
+  /* Serial.print("Llum: ");
   Serial.print(sensorValue);
   Serial.print(", CM: ");
   Serial.println(cmMsec);*/
@@ -123,39 +128,36 @@ void loop() {
     //moviment(FORWARD_LEFT);
     //moviment(ENDCODE);
   }*/
-  while (cmMsec>35 and avant<5){
+  if (cmMsec==0){
     moviment(FORWARD);
     moviment(ENDCODE);
-    //delay(10);
-    microsec = ultrasonic.timing();
-    cmMsec = ultrasonic.convert(microsec, Ultrasonic::CM); //Centimetres
+  }
+  while (cmMsec>35 and avant<4){
+    moviment(FORWARD);
+    moviment(ENDCODE);
+    cmMsec = sonar.ping_cm();
     Serial.print("Endavant, CM: ");
     Serial.println(cmMsec);
-    //delay(10);
     avant++;
   }
   avant=0;
-  while (cmMsec<55){
+  while (cmMsec<55 and cmMsec>0 and avant <4){
     moviment(BACKWARD_RIGHT);
     moviment(ENDCODE);
-    //delay(10);
-    microsec = ultrasonic.timing();
-    cmMsec = ultrasonic.convert(microsec, Ultrasonic::CM); //Centimetres
+    cmMsec = sonar.ping_cm();
     Serial.print("Endarrera dreta, CM: ");
     Serial.println(cmMsec);
-    //delay(10);
+    delay(50);
     enrera=1;
+    avant++;
    }
    if (enrera==1){
-    while (cmMsec>35 and avant<5){
+    while (cmMsec>35 and avant<1){
       moviment(FORWARD_RIGHT);
       moviment(ENDCODE);
-      //delay(10);
-      microsec = ultrasonic.timing();
-      cmMsec = ultrasonic.convert(microsec, Ultrasonic::CM); //Centimetres
+      cmMsec = sonar.ping_cm();
       Serial.print("Endavant Dreta, CM: ");
       Serial.println(cmMsec);
-      //delay(10);
       avant++;
     }
    }
