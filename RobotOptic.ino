@@ -1,7 +1,4 @@
-<<<<<<< HEAD
 
-=======
->>>>>>> d3478669a76369363338c0db19f7139c65197c30
 /*
  * Programa per controlar un robot amb arduino de forma autonoma
  * 
@@ -53,7 +50,7 @@ const int valorBlanc = 400;
 
 //PIN de sortida i connectat a l'antena de la joguina
 #define ANTENA     9
-// Per tal que funcioni s'ha de cridar la funció moviment (int tipus_moviment) dient quin moviment fem i despres cridarla amb ENDCODE
+// Per tal que funcioni s'ha de cridar la funció moviment (int tipus_moviment) dient quin moviment fem i despres cridar-la amb ENDCODE
 
 // Sensor UltraSonic de distancia
 #include <NewPing.h>
@@ -189,7 +186,4 @@ void loop() {
   }*/
   delay(500);
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> d3478669a76369363338c0db19f7139c65197c30
