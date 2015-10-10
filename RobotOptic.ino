@@ -18,10 +18,15 @@
  * Realtek RX2 (RX2B) Control via Arduino
  *
  * També basat en codi de mindprobe http://forum.arduino.cc/index.php?topic=171238.0
+ * 
  * RX2B datasheet http://www.datasheetdir.com/RX-2B+download
  *   
  */
 
+  int avant; // Contador de les vegades que hem enviat el tipus de moviment
+  int enrera; // Indica si hem anat endarrera
+  int contador; // Revisar per eliminar, no es fa servir
+  
 // Sensor de llum ambiental
 int sensorValue;
 int sensorLow=1023;
@@ -41,7 +46,6 @@ const int valorBlanc = 400;
 #define FORWARD_LEFT   34
 
 #define BACKWARD       40
-
 #define BACKWARD_RIGHT 46
 #define BACKWARD_LEFT  52
 // Tambe canviats
@@ -61,7 +65,7 @@ const int valorBlanc = 400;
 
 // Inicialització de la funció
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
-
+float cmMsec; //Variable on guardarem el resultat de sonar()
 
 void moviment (int tipus_moviment){
    for(int i=0; i<=3; i++) // Inici de la comunicació 4 W2 pulses 1KHz 75% duty cycle
@@ -91,20 +95,20 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  int avant;
-  int enrera;
-  int contador;
-  float cmMsec;
+  // Inicialitzem variables a cada loop
   contador=0;
   enrera=0;
   avant=0;
   cmMsec=0;
+  
+  delay(74);
   //Llegim valor del sensor de llum
   sensorValue = analogRead(A0);
   // Print del Valor per port serie
   Serial.println(sensorValue);
   // Obtenim la distancia
   cmMsec = sonar.ping_cm();
+  delay(50);
   /*// sin no mesura bé la distancia reset i tornar a llegir
   if (cmMsec==0.00){
     digitalWrite(TRIGGER_PIN, LOW);
@@ -119,17 +123,9 @@ void loop() {
   Serial.print(sensorValue);
   Serial.print(", CM: ");
   Serial.println(cmMsec);*/
-  /*if (cmMsec>10){
-    moviment(FORWARD);
-    moviment(ENDCODE);
-  }
-  else{
-    moviment(BACKWARD_LEFT);
-    moviment(ENDCODE);
-    //moviment(FORWARD_LEFT);
-    //moviment(ENDCODE);
-  }*/
   if (cmMsec==0){
+    // Si val 0 es perque o esta fora de rang + de 4Mts o el sensor no llegeix bé
+    // Alguns sensors HC-SR04 fallen i s'arreglar amb una resistencia de 10k http://therandomlab.blogspot.com.es/2015/05/repair-and-solve-faulty-hc-sr04.html
     moviment(FORWARD);
     moviment(ENDCODE);
   }
@@ -139,6 +135,7 @@ void loop() {
     cmMsec = sonar.ping_cm();
     Serial.print("Endavant, CM: ");
     Serial.println(cmMsec);
+    delay(50);
     avant++;
   }
   avant=0;
@@ -160,6 +157,7 @@ void loop() {
       cmMsec = sonar.ping_cm();
       Serial.print("Endavant Dreta, CM: ");
       Serial.println(cmMsec);
+      delay(50);
       avant++;
     }
    }
@@ -185,6 +183,6 @@ void loop() {
       Serial.println("Esquerra"); 
     }
   }*/
-  delay(500);
+  
 }
 
