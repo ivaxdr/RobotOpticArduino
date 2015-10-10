@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> d3478669a76369363338c0db19f7139c65197c30
 /*
  * Programa per controlar un robot amb arduino de forma autonoma
  * 
@@ -186,4 +189,7 @@ void loop() {
   }*/
   delay(500);
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> d3478669a76369363338c0db19f7139c65197c30
