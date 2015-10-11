@@ -117,7 +117,7 @@ void loop() {
   Serial.print(sensorValue);
   Serial.print(", CM: ");
   Serial.println(cmMsec);*/
-  if (cmMsec==0){
+  if (cmMsec==0 or cmMsec>150){
     // Si val 0 es perque o esta fora de rang + de 4Mts o el sensor no llegeix bé
     // Alguns sensors HC-SR04 fallen i s'arreglar amb una resistencia de 10k http://therandomlab.blogspot.com.es/2015/05/repair-and-solve-faulty-hc-sr04.html
     moviment(FORWARD);
@@ -159,7 +159,7 @@ void loop() {
    }
    avant=0;
    if (enrera==1){
-    while (cmMsec>38 and avant<2){
+    while (cmMsec>38 and cmMsec>0 and avant<2){
       if (numAleatori>50){
         moviment(FORWARD_RIGHT);
         moviment(ENDCODE);  
