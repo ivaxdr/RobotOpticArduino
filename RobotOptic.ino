@@ -23,10 +23,11 @@
  *   
  */
 
-  int avant; // Contador de les vegades que hem enviat el tipus de moviment
-  int enrera; // Indica si hem anat endarrera
-  int contador; // Revisar per eliminar, no es fa servir
-  
+int avant; // Contador de les vegades que hem enviat el tipus de moviment
+int enrera; // Indica si hem anat endarrera
+int contador; // Revisar per eliminar, no es fa servir
+long numAleatori;
+
 // Sensor de llum ambiental
 int sensorValue;
 int sensorLow=1023;
@@ -67,6 +68,7 @@ const int valorBlanc = 400;
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 float cmMsec; //Variable on guardarem el resultat de sonar()
 
+// Funció moviment 
 void moviment (int tipus_moviment){
    for(int i=0; i<=3; i++) // Inici de la comunicació 4 W2 pulses 1KHz 75% duty cycle
  {
@@ -90,7 +92,7 @@ void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
   pinMode(ANTENA, OUTPUT);
-
+  randomSeed(analogRead(1));
 }
 
 void loop() {
@@ -138,10 +140,24 @@ void loop() {
     delay(50);
     avant++;
   }
-  avant=0;
+  if (avant!=0){
+    delay(500); // Donem temps a que es freni el cotxe  
+  }
+  else{
+    avant=0;  
+  }
+  numAleatori=random(1,101); // Així farem que no sempre giri igual.
+  
   while (cmMsec<58 and cmMsec>0 and avant <4){
-    moviment(BACKWARD_RIGHT);
-    moviment(ENDCODE);
+    if (numAleatori>50){
+      moviment(BACKWARD_RIGHT);
+      moviment(ENDCODE);  
+    }
+    else{
+      moviment(BACKWARD_LEFT);
+      moviment(ENDCODE);
+    }
+    
     cmMsec = sonar.ping_cm();
     Serial.print("Endarrera dreta, CM: ");
     Serial.println(cmMsec);
@@ -152,8 +168,15 @@ void loop() {
    avant=0;
    if (enrera==1){
     while (cmMsec>38 and avant<2){
-      moviment(FORWARD_RIGHT);
-      moviment(ENDCODE);
+      if (numAleatori>50){
+        moviment(FORWARD_RIGHT);
+        moviment(ENDCODE);  
+      }
+      else{
+        moviment(FORWARD_LEFT);
+        moviment(ENDCODE);
+      }
+      
       cmMsec = sonar.ping_cm();
       Serial.print("Endavant Dreta, CM: ");
       Serial.println(cmMsec);
