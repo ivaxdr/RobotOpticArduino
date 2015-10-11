@@ -111,14 +111,6 @@ void loop() {
   // Obtenim la distancia
   cmMsec = sonar.ping_cm();
   delay(50);
-  /*// sin no mesura bé la distancia reset i tornar a llegir
-  if (cmMsec==0.00){
-    digitalWrite(TRIGGER_PIN, LOW);
-    delayMicroseconds(100);
-    digitalWrite(TRIGGER_PIN, HIGH);
-    microsec = ultrasonic.timing();
-    cmMsec = ultrasonic.convert(microsec, Ultrasonic::CM); //Centimetres
-  }*/
   Serial.print("Fora Bucle, CM: ");
   Serial.println(cmMsec);
   /* Serial.print("Llum: ");
@@ -185,6 +177,8 @@ void loop() {
     }
    }
    enrera=0;
+  
+  //Estructura de seguiment linia
   /*if (sensorValue > valorBlanc){
     // Cotxe endavant
     Serial.println("Endavant");
