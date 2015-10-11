@@ -129,7 +129,7 @@ void loop() {
     moviment(FORWARD);
     moviment(ENDCODE);
   }
-  while (cmMsec>35 and avant<4){
+  while (cmMsec>38 and avant<4){
     moviment(FORWARD);
     moviment(ENDCODE);
     cmMsec = sonar.ping_cm();
@@ -139,7 +139,7 @@ void loop() {
     avant++;
   }
   avant=0;
-  while (cmMsec<55 and cmMsec>0 and avant <4){
+  while (cmMsec<58 and cmMsec>0 and avant <4){
     moviment(BACKWARD_RIGHT);
     moviment(ENDCODE);
     cmMsec = sonar.ping_cm();
@@ -151,7 +151,7 @@ void loop() {
    }
    avant=0;
    if (enrera==1){
-    while (cmMsec>35 and avant<1){
+    while (cmMsec>38 and avant<2){
       moviment(FORWARD_RIGHT);
       moviment(ENDCODE);
       cmMsec = sonar.ping_cm();
